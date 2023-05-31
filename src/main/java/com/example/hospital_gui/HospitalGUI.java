@@ -18,6 +18,10 @@ public class HospitalGUI extends Application {
     private ArrayList<Person> persons;
     private Window primaryStage;
 
+    public HospitalGUI(Window primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -25,14 +29,12 @@ public class HospitalGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         persons = new ArrayList<>();
-
         primaryStage.setTitle("Hospital Management System");
-
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(10));
+        GridPane ashraf = new GridPane();
+        ashraf.setAlignment(Pos.CENTER);
+        ashraf.setHgap(10);
+        ashraf.setVgap(10);
+        ashraf.setPadding(new Insets(10));
 
         Button showPatientsButton = new Button("Show all patients");
         Button addPatientButton = new Button("Add new patient");
@@ -40,90 +42,110 @@ public class HospitalGUI extends Application {
         Button addDoctorButton = new Button("Add new doctor");
 
         showPatientsButton.setOnAction(e -> showAllPatients());
-        addPatientButton.setOnAction(e -> addNewPatient(primaryStage));
+        addPatientButton.setOnAction(e -> addNewPatient());
         showDoctorsButton.setOnAction(e -> showAllDoctors());
-        addDoctorButton.setOnAction(e -> addNewDoctor(primaryStage));
+        addDoctorButton.setOnAction(e -> addNewDoctor());
 
-        gridPane.add(showPatientsButton, 0, 0);
-        gridPane.add(addPatientButton, 1, 0);
-        gridPane.add(showDoctorsButton, 0, 1);
-        gridPane.add(addDoctorButton, 1, 1);
+        ashraf.add(showPatientsButton, 0, 0);
+        ashraf.add(addPatientButton, 1, 0);
+        ashraf.add(showDoctorsButton, 0, 1);
+        ashraf.add(addDoctorButton, 1, 1);
 
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(gridPane);
+        vbox.getChildren().addAll(ashraf);
 
-        Scene scene = new Scene(vbox, 400, 300);
-        primaryStage.setScene(scene);
+        Scene yahia = new Scene(vbox, 400, 300);
+        primaryStage.setScene(yahia);
         primaryStage.show();
     }
 
     private void showAllPatients() {
-        if (persons.isEmpty()) {
+        StringBuilder patientsInfo = new StringBuilder();
+        for (Person person : persons) {
+            if (person instanceof Patient) {
+                patientsInfo.append(person.toString()).append("\n");
+            }
+        }
+        if (patientsInfo.isEmpty()) {
             showAlert("Patients", "No patients found.");
         } else {
-            StringBuilder patientsInfo = new StringBuilder();
-            for (Person person : persons) {
-                if (person instanceof Patient) {
-                    patientsInfo.append(person.toString()).append("\n");
-                }
-            }
             showAlert("Patients", patientsInfo.toString());
         }
     }
 
-    private void addNewPatient(Stage primaryStage) {
-        String name = showInputDialog(primaryStage, "Enter patient name:");
-        String id = showInputDialog(primaryStage, "Enter patient ID:");
-        String medicalCase = showInputDialog(primaryStage, "Enter patient medical case:");
-        String attachedDoctor = showInputDialog(primaryStage, "Enter attached doctor:");
+    private void addNewPatient() {
 
-        if (name != null && id != null && medicalCase != null && attachedDoctor != null) {
-            Person patient = new Patient(name, id, medicalCase, attachedDoctor);
-            persons.add(patient);
-            showAlert("Success", "Added patient: " + patient);
-        } else {
-            showAlert("Error", "Failed to add patient. Please provide all the required information.");
+        String name = showInputDialog("Enter patient name:");
+        while (name.isEmpty()){
+            showAlert("Error", "Please provide  a valid name.");
+            name = showInputDialog( "Enter patient name:");
         }
+        String id = showInputDialog( "Enter patient ID:");
+        while (id.isEmpty()){
+            showAlert("Error", "Please provide  a valid ID.");
+            id = showInputDialog( "Enter patient ID:");
+        }
+        String medicalCase = showInputDialog( "Enter patient medical case:");
+        while (medicalCase.isEmpty()){
+            showAlert("Error", "Please provide  a valid medical case.");
+            medicalCase = showInputDialog( "Enter patient medical case:");
+        }
+        String attachedDoctor = showInputDialog( "Enter attached doctor:");
+        while (attachedDoctor.isEmpty()){
+            showAlert("Error", "Please provide  a valid  doctor.");
+            attachedDoctor = showInputDialog( "Enter attached doctor:");
+        }
+        Patient patient = new Patient(name, id, medicalCase, attachedDoctor);
+        persons.add(patient);
+        showAlert("Success", "Added patient: " + patient);
     }
 
     private void showAllDoctors() {
-        if (persons.isEmpty()) {
+        StringBuilder doctorsInfo = new StringBuilder();
+        for (Person person : persons) {
+            if (person instanceof Doctor) {
+                doctorsInfo.append(person.toString()).append("\n");
+            }
+        }
+        if (doctorsInfo.isEmpty()) {
             showAlert("Doctors", "No doctors found.");
         } else {
-            StringBuilder doctorsInfo = new StringBuilder();
-            for (Person person : persons) {
-                if (person instanceof Doctor) {
-                    doctorsInfo.append(person.toString()).append("\n");
-                }
-            }
+
             showAlert("Doctors", doctorsInfo.toString());
         }
     }
 
-    private void addNewDoctor(Stage primaryStage) {
-        String name = showInputDialog(primaryStage, "Enter doctor name:");
-        String id = showInputDialog(primaryStage, "Enter doctor ID:");
-        String specialization = showInputDialog(primaryStage, "Enter doctor specialization:");
-
-        if (name != null && id != null && specialization != null) {
+    private void addNewDoctor() {
+        String name = showInputDialog( "Enter doctor name:");
+        while (name.isEmpty()){
+            showAlert("Error", "Please provide  a valid name.");
+            name = showInputDialog("Enter doctor name:");
+        }
+        String id = showInputDialog( "Enter doctor ID:");
+        while (id.isEmpty()){
+            showAlert("Error", "Please provide  a valid ID.");
+            id = showInputDialog( "Enter doctor ID:");
+        }
+        String specialization = showInputDialog( "Enter doctor specialization:");
+        while (specialization.isEmpty()){
+            showAlert("Error", "Please provide  a valid specialization.");
+            specialization = showInputDialog( "Enter doctor specialization:");
+        }
             Person doctor = new Doctor(name, id, specialization);
             persons.add(doctor);
             showAlert("Success", "Added doctor: " + doctor);
-        } else {
-            showAlert("Error", "Failed to add doctor. Please provide all the required information.");
-        }
     }
 
-    private String showInputDialog(Stage primaryStage, String message) {
+    private String showInputDialog( String message) {
         TextInputDialog dialog = new TextInputDialog();
+        //to get rid of that annoyingly big Confirmation with Question mark thingy
         dialog.setHeaderText(null);
         dialog.setContentText(message);
         dialog.initOwner(primaryStage);
         dialog.showAndWait();
         return dialog.getResult();
     }
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
